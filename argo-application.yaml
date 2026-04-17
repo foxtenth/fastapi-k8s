@@ -1,0 +1,24 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: fastapi-gitops-app
+  namespace: argocd
+spec:
+  project: default
+  source:
+    # URL of your Git repository
+    repoURL: 'https://github.com/YOUR_GITHUB_USER/YOUR_REPO_NAME.git' 
+    targetRevision: HEAD
+    path: charts/fastapi-chart  # Path to your Helm chart folder
+    helm:
+      valueFiles:
+        - values.yaml
+  destination:
+    server: 'https://kubernetes.default.svc'
+    namespace: fastapi-app # The namespace we created above
+  syncPolicy:
+    automated: # This enables Auto-sync
+      prune: true     # Deletes resources if you delete them from Git
+      selfHeal: true  # If someone manually edits K8s, Argo reverts it back
+    syncOptions:
+      - CreateNamespace=true # Tells Argo to create the namespace if it's missing

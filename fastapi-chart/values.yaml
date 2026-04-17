@@ -1,0 +1,19 @@
+replicaCount: 2
+
+image:
+  repository: fastapi-app
+  tag: v1
+  pullPolicy: Never
+
+service:
+  type: ClusterIP
+  port: 80
+  targetPort: 8000
+
+redis:
+  host: "redis"
+  port: 6379
+
+ingress:
+  enabled: true
+  path: /
